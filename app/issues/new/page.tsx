@@ -58,7 +58,7 @@ const NewIssuePage = () => {
           name="description"
           control={control}
           render={({ field }) => (
-            <SimpleMDE placeholder="Description" {...field} />
+            <SimpleMDE className="mb-0" placeholder="Description" {...field} />
           )}
         />
         {errors.description && (
