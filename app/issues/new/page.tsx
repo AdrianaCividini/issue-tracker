@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorMessage from "@/app/components/ErrorMessage";
 import { createIssueSchema } from "@/app/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
@@ -49,11 +50,7 @@ const NewIssuePage = () => {
             <MagnifyingGlassIcon height="16" width="16" />
           </TextField.Slot>
         </TextField.Root>
-        {errors.title && (
-          <Text color="red" as="p">
-            {errors.title.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -61,11 +58,7 @@ const NewIssuePage = () => {
             <SimpleMDE className="mb-0" placeholder="Description" {...field} />
           )}
         />
-        {errors.description && (
-          <Text color="red" as="p">
-            {errors.description.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button>Submit New Issue</Button>
       </form>
     </div>
