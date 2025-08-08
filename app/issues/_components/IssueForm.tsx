@@ -1,9 +1,9 @@
 "use client";
 
 import ErrorMessage from "@/app/components/ErrorMessage";
-import dynamic from "next/dynamic";
 import Spinner from "@/app/components/Spinner";
-
+import { Issue } from "@/app/generated/prisma";
+import { issueSchema } from "@/app/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Button, Callout, TextField } from "@radix-ui/themes";
@@ -12,13 +12,8 @@ import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
-import { Issue } from "@/app/generated/prisma";
-import { issueSchema } from "@/app/validationSchema";
-
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
@@ -38,12 +33,12 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setIsSubmitting(true);
-      await axios.post("/api/issues", data);
+      if (issue) await axios.patch("/api/issues/" + issue.id, data);
+      else await axios.post("/api/issues", data);
       router.push("/issues");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setIsSubmitting(false);
-      setError("An unexpected error occurred");
+      setError("An unexpected error occurred.");
     }
   });
   return (
@@ -75,7 +70,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button disabled={isSubmitting}>
-          Submit New Issue
+          {issue ? "Update Issue" : "Submit New Issue"}{" "}
           {isSubmitting && <Spinner />}
         </Button>
       </form>
