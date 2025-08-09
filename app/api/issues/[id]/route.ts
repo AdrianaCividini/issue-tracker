@@ -6,16 +6,20 @@ const prisma = new PrismaClient();
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
+
   const body = await request.json();
   const validation = issueSchema.safeParse(body);
+
   if (!validation.success) {
     return NextResponse.json(validation.error.issues, { status: 400 });
   }
+
   const issue = await prisma.issue.findUnique({
     where: {
-      id: parseInt(params.id),
+      id: parseInt(id),
     },
   });
 
