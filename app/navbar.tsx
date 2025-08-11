@@ -4,12 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import classnames from "classnames";
 import { AiFillBug } from "react-icons/ai";
+import { useSession } from "next-auth/react";
+import { Box } from "@radix-ui/themes";
 
-const navbar = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+const Navbar = () => {
   const currentPath = usePathname();
-  console.log(currentPath);
-
+  const { status, data: session } = useSession();
   const links = [
     { label: "Dashboard", href: "/" },
     { label: "Issues", href: "/issues" },
@@ -22,21 +22,30 @@ const navbar = () => {
       </Link>
       <ul className="flex space-x-6">
         {links.map((link) => (
-          <Link
-            key={link.href}
-            className={classnames({
-              "text-zinc-900": link.href === currentPath,
-              "text-zinc-500": link.href !== currentPath,
-              "hover:text-zinc-900 transition-colors": true,
-            })}
-            href={link.href}
-          >
-            {link.label}
-          </Link>
+          <li key={link.href}>
+            <Link
+              className={classnames({
+                "text-zinc-900": link.href === currentPath,
+                "text-zinc-500": link.href !== currentPath,
+                "hover:text-zinc-900 transition-colors": true,
+              })}
+              href={link.href}
+            >
+              {link.label}
+            </Link>
+          </li>
         ))}
       </ul>
+      <Box>
+        {status === "authenticated" && (
+          <Link href="/api/auth/signout">Log out</Link>
+        )}
+        {status === "unauthenticated" && (
+          <Link href="/api/auth/signin">Log in</Link>
+        )}
+      </Box>
     </nav>
   );
 };
 
-export default navbar;
+export default Navbar;

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./navbar";
+import AuthProvider from "./auth/Provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,12 +25,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
-        <Theme accentColor="pink" radius="medium">
-          <Navbar />
-          <main>
-            <Container>{children}</Container>
-          </main>
-        </Theme>
+        <AuthProvider>
+          <Theme accentColor="pink" radius="medium">
+            <Navbar />
+            <main>
+              <Container>{children}</Container>
+            </main>
+          </Theme>
+        </AuthProvider>
       </body>
     </html>
   );
