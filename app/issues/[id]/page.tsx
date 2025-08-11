@@ -7,12 +7,14 @@ import DeleteIssueButton from "./DeleteIssueButton";
 
 const prisma = new PrismaClient();
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 const IssueDetailPage = async ({ params }: Props) => {
+  const resolvedParams = await params;
+
   const issue = await prisma.issue.findUnique({
     where: {
-      id: parseInt(params.id),
+      id: parseInt(resolvedParams.id),
     },
   });
 
