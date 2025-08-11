@@ -34,3 +34,9 @@ main {
   --default-font-family: var(--font-inter);
   --font-weight-regular: 500;
 }
+
+layer utilities {
+  .nav-link {
+    @apply text-zinc-500 hover:text-zinc-900 transition-colors;
+  }
+}
