@@ -4,8 +4,9 @@ import { PrismaClient } from "../../generated/prisma";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./issueDetails";
 import DeleteIssueButton from "./DeleteIssueButton";
-import authOptions from "@/app/api/auth/[...nextauth]/authOptions";
 import { getServerSession } from "next-auth";
+import AssigneeSelect from "./AssigneeSelect";
+import authOptions from "@/app/api/auth/[...nextauth]/authOptions";
 
 const prisma = new PrismaClient();
 interface Props {
@@ -31,6 +32,7 @@ const IssueDetailPage = async ({ params }: Props) => {
       {session && (
         <Box>
           <Flex direction="column" gap="4">
+            <AssigneeSelect />
             <EditIssueButton issueId={issue.id} />
             <DeleteIssueButton issueId={issue.id} />
           </Flex>

@@ -10,6 +10,9 @@ const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
 };
 
 export default authOptions;
