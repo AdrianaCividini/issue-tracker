@@ -19,7 +19,7 @@ model Issue {
   title            String   @db.VarChar(255)
   description      String   @db.Text
   status           Status   @default(OPEN)
-  createAt         DateTime @default(now())
+  createdAt        DateTime @default(now())
   updateAt         DateTime @updatedAt
   assignedToUserId String?  @db.VarChar(255)
   assignedToUser   User?    @relation(fields: [assignedToUserId], references: [id])
