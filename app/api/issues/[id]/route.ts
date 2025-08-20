@@ -8,10 +8,9 @@ const prisma = new PrismaClient();
 
 export async function PATCH(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await context.params;
-  const issueId = Number(id);
+  const issueId = Number(params.id);
   if (isNaN(issueId)) {
     return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
   }
@@ -39,7 +38,7 @@ export async function PATCH(
 
   const issue = await prisma.issue.findUnique({
     where: {
-      id: parseInt(id),
+      id: parseInt(params.id),
     },
   });
 
