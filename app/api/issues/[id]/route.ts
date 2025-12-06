@@ -1,13 +1,17 @@
 import { PrismaClient } from "@/app/generated/prisma";
 import { patchIssueSchema } from "@/app/validationSchema";
 import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+
+// or in new Next.js versions:
+// import type { RouteHandlerContext } from "next/server";
+
 import authOptions from "@/app/api/auth/[...nextauth]/authOptions";
 
 const prisma = new PrismaClient();
 
 export async function PATCH(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   const issueId = Number(params.id);
@@ -57,7 +61,7 @@ export async function PATCH(
   return NextResponse.json(updateIssue);
 }
 export async function DELETE(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   const session = await getServerSession(authOptions);
