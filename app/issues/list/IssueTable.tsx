@@ -2,9 +2,9 @@ import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Table } from "@radix-ui/themes";
 import Link from "next/link";
 import React from "react";
-import IssueStatusBadge from "./IssueStatusBadge";
+import IssueStatusBadge from "../../components/IssueStatusBadge";
 import NextLink from "next/link";
-import { Issue, Status } from "../generated/prisma";
+import { Issue, Status } from "../../generated/prisma";
 
 export interface IssueQuery {
   status?: Status;
@@ -14,10 +14,10 @@ export interface IssueQuery {
 
 const IssueTable = ({
   issues,
-  searchParams,
+  orderBy,
 }: {
   issues: Issue[];
-  searchParams: IssueQuery;
+  orderBy?: keyof Issue;
 }) => {
   return (
     <Table.Root variant="surface">
@@ -31,14 +31,12 @@ const IssueTable = ({
               <NextLink
                 href={{
                   pathname: "/issues/list",
-                  query: { ...searchParams, orderBy: column.value },
+                  query: { orderBy: column.value },
                 }}
               >
                 {column.label}
               </NextLink>
-              {column.value === searchParams.orderBy && (
-                <ArrowUpIcon className="inline" />
-              )}
+              {column.value === orderBy && <ArrowUpIcon className="inline" />}
             </Table.ColumnHeaderCell>
           ))}
         </Table.Row>
