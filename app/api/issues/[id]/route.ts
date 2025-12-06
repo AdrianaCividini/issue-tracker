@@ -10,10 +10,9 @@ import authOptions from "@/app/api/auth/[...nextauth]/authOptions";
 
 const prisma = new PrismaClient();
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: Request, context: unknown) {
+  const { params } = context as { params: { id: string } };
+
   const issueId = Number(params.id);
   if (isNaN(issueId)) {
     return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
@@ -60,29 +59,30 @@ export async function PATCH(
   });
   return NextResponse.json(updateIssue);
 }
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({}, { status: 401 });
+export async function DELETE(request: Request, context: unknown) {
+  const { params } = context as { params: { id: string } };
 
   const issueId = Number(params.id);
-  if (isNaN(issueId)) {
-    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-  }
-  const issue = await prisma.issue.findUnique({
-    where: {
-      id: issueId,
-    },
-  });
-  if (!issue)
-    return NextResponse.json({ error: "Invalid issue" }, { status: 404 });
+  {
+    const session = await getServerSession(authOptions);
+    if (!session) return NextResponse.json({}, { status: 401 });
 
-  await prisma.issue.delete({
-    where: {
-      id: issueId,
-    },
-  });
-  return NextResponse.json({});
+    if (isNaN(issueId)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+    const issue = await prisma.issue.findUnique({
+      where: {
+        id: issueId,
+      },
+    });
+    if (!issue)
+      return NextResponse.json({ error: "Invalid issue" }, { status: 404 });
+
+    await prisma.issue.delete({
+      where: {
+        id: issueId,
+      },
+    });
+    return NextResponse.json({});
+  }
 }
